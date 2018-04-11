@@ -12,13 +12,15 @@ import os
 import sys
 from skimage import io
 
+import IPython
+
 if not os.path.exists('./vae_img'):
     os.mkdir('./vae_img')
 
 
 def to_img(x):
     x = x.clamp(0, 1)
-    x = x.view(x.size(0), 1, 28, 28)
+    x = x.view(x.size(0), 3, 256, 512)
     return x
 
 
@@ -28,14 +30,15 @@ learning_rate = 1e-3
 
 img_transform = transforms.Compose([
     transforms.ToTensor()
-    # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 
 class CityscapesDataset(Dataset):
-    def __init__(self, root_dir):
+    def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
         self.names = os.listdir(root_dir)
+        self.transform = transform
 
     def __len__(self):
         return len(self.names)
@@ -43,24 +46,24 @@ class CityscapesDataset(Dataset):
     def __getitem__(self, idx):
         img_name = self.names[idx]
         image = io.imread(os.path.join(self.root_dir, img_name))
+
+        if self.transform:
+            image = self.transform(image)
+
         return image
 
-dataset = CityscapesDataset('./semantics')
+dataset = CityscapesDataset('./semantics', transform = img_transform)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-import IPython
-IPython.embed()
-sys.exit()
 
 class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(784, 400)
+        self.fc1 = nn.Linear(393216, 400)
         self.fc21 = nn.Linear(400, 20)
         self.fc22 = nn.Linear(400, 20)
         self.fc3 = nn.Linear(20, 400)
-        self.fc4 = nn.Linear(400, 784)
+        self.fc4 = nn.Linear(400, 393216)
 
     def encode(self, x):
         h1 = F.relu(self.fc1(x))
@@ -113,7 +116,7 @@ for epoch in range(num_epochs):
     model.train()
     train_loss = 0
     for batch_idx, data in enumerate(dataloader):
-        img, _ = data
+        img = data
         img = img.view(img.size(0), -1)
         img = Variable(img)
         if torch.cuda.is_available():
