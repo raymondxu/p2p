@@ -26,7 +26,7 @@ def to_img(x):
 
 num_epochs = 100
 batch_size = 128
-learning_rate = 1e-3
+learning_rate = 1e-5
 
 img_transform = transforms.Compose([
     transforms.ToTensor()
@@ -110,7 +110,7 @@ def loss_function(recon_x, x, mu, logvar):
     return BCE + KLD
 
 
-optimizer = optim.Adam(model.parameters(), lr=1e-3)
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 for epoch in range(num_epochs):
     model.train()
@@ -127,7 +127,7 @@ for epoch in range(num_epochs):
         loss.backward()
         train_loss += loss.data[0]
         optimizer.step()
-        if batch_idx % 100 == 0:
+        if batch_idx % 5 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch,
                 batch_idx * len(img),
