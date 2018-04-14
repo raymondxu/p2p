@@ -11,6 +11,9 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self):    
+        # our project specifics
+        self.parser.add_argument('--latent', type=bool, default='false', help='whether we are training on the latent representation of the semantic maps or not')
+
         # experiment specifics
         self.parser.add_argument('--name', type=str, default='label2city', help='name of the experiment. It decides where to store samples and models')        
         self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')                       
