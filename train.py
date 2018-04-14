@@ -30,10 +30,7 @@ if opt.debug:
     opt.niter_decay = 0
     opt.max_dataset_size = 10
 
-if opt.latent:
-    data_loader = CreateLatentDataLoader(opt)
-else:
-    data_loader = CreateDataLoader(opt)
+data_loader = CreateDataLoader(opt)
 
 dataset = data_loader.load_data()
 dataset_size = len(data_loader)
