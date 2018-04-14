@@ -1,0 +1,1 @@
+python3 train.py --name label2city_latent --model latent
