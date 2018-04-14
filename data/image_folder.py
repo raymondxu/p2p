@@ -31,6 +31,18 @@ def make_dataset(dir):
     return images
 
 
+def make_dataset_latent(dir):
+    latents = []
+    assert os.path.isdir(dir), '%s is not a valid directory' % dir
+
+    for root, _, fnames in sorted(os.walk(dir)):
+        for fname in fnames:
+            path = os.path.join(root, fname)
+            latents.append(path)
+
+    return latents
+
+
 def default_loader(path):
     return Image.open(path).convert('RGB')
 
