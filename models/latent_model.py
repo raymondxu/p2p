@@ -17,8 +17,8 @@ class LatentModel(BaseModel):
         if opt.resize_or_crop != 'none': # when training at full res this causes OOM
             torch.backends.cudnn.benchmark = True
         self.isTrain = opt.isTrain
-        self.use_features = opt.instance_feat or opt.label_feat
-        self.gen_features = self.use_features and not self.opt.load_features
+        self.use_features = False # opt.instance_feat or opt.label_feat
+        self.gen_features = False # self.use_features and not self.opt.load_features
         input_nc = opt.label_nc if opt.label_nc != 0 else 3
 
         ##### define networks        
@@ -136,12 +136,12 @@ class LatentModel(BaseModel):
         input_label, inst_map, real_image, feat_map = self.encode_input(label, inst, image, feat)  
 
         # Fake Generation
-        if self.use_features:
-            if not self.opt.load_features:
-                feat_map = self.netE.forward(real_image, inst_map)                     
-            input_concat = torch.cat((input_label, feat_map), dim=1)                        
-        else:
-            input_concat = input_label
+        # if self.use_features:
+        #     if not self.opt.load_features:
+        #         feat_map = self.netE.forward(real_image, inst_map)                     
+        #     input_concat = torch.cat((input_label, feat_map), dim=1)                        
+        # else
+        input_concat = input_label
         fake_image = self.netG.forward(input_concat)
 
         # Fake Detection and Loss

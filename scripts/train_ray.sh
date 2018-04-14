@@ -1,1 +1,1 @@
-python3 train.py --name label2city_latent --model latent
+python3 train.py --name label2city_256p --loadSize 256
