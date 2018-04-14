@@ -1,7 +1,7 @@
 import numpy as np
 import os.path
 from data.base_dataset import BaseDataset, get_params, get_transform, normalize
-from data.image_folder import make_dataset_latent
+from data.image_folder import make_dataset, make_dataset_latent
 from PIL import Image
 
 class LatentDataset(BaseDataset):
@@ -38,14 +38,16 @@ class LatentDataset(BaseDataset):
         ### input A (label maps)
         A_path = self.A_paths[index]              
         # A = Image.open(A_path)        
-        A = np.loadtxt(A_path)
-        params = get_params(self.opt, A.size)
+        A = np.loadtxt(A_path, ndmin=2)
+        print(A, A.shape)
+        params = get_params(self.opt, A.shape)
         if self.opt.label_nc == 0:
             transform_A = get_transform(self.opt, params)
-            A_tensor = transform_A(A.convert('RGB'))
+            # A_tensor = transform_A(A.convert('RGB'))
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            A_tensor = transform_A(A) * 255.0
+            # A_tensor = transform_A(A) * 255.0
+        A_tensor = A
 
         B_tensor = inst_tensor = feat_tensor = 0
         ### input B (real images)
@@ -76,4 +78,4 @@ class LatentDataset(BaseDataset):
         return len(self.A_paths)
 
     def name(self):
-        return 'AlignedDataset'
+        return 'LatentDataset'
