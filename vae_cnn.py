@@ -47,6 +47,8 @@ torch.manual_seed(args.seed)
 if args.cuda:
     torch.cuda.manual_seed(args.seed)
 
+# REMOVE LATER
+torch.backends.cudnn.enabled = False
 
 class CityscapesDataset(Dataset):
     def __init__(self, root_dir):
