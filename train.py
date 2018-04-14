@@ -3,7 +3,7 @@
 import time
 from collections import OrderedDict
 from options.train_options import TrainOptions
-from data.data_loader import CreateDataLoader
+from data.data_loader import CreateDataLoader, CreateLatentDataLoader
 from models.models import create_model
 import util.util as util
 from util.visualizer import Visualizer
@@ -30,7 +30,11 @@ if opt.debug:
     opt.niter_decay = 0
     opt.max_dataset_size = 10
 
-data_loader = CreateDataLoader(opt)
+if opt.latent:
+    data_loader = CreateLatentDataLoader(opt)
+else:
+    data_loader = CreateDataLoader(opt)
+
 dataset = data_loader.load_data()
 dataset_size = len(data_loader)
 print('#training images = %d' % dataset_size)

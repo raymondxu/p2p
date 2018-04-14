@@ -5,3 +5,11 @@ def CreateDataLoader(opt):
     print(data_loader.name())
     data_loader.initialize(opt)
     return data_loader
+
+
+def CreateLatentDataLoader(opt):
+    from data.latent_dataset_data_loader import LatentDatasetDataLoader
+    data_loader = LatentDatasetDataLoader()
+    print(data_loader.name())
+    data_loader.initialize(opt)
+    return data_loader
