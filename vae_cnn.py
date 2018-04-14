@@ -11,6 +11,9 @@ from torchvision.datasets import MNIST
 import os
 import sys
 from skimage import io
+import argparse
+from glob import glob
+import numpy as np
 
 import IPython
 
@@ -23,37 +26,45 @@ def to_img(x):
     x = x.view(x.size(0), 3, 256, 512)
     return x
 
+parser = argparse.ArgumentParser(description='PyTorch VAE')
+parser.add_argument('--batch-size', type=int, default=128, metavar='N',
+                    help='input batch size for training (default: 128)')
+parser.add_argument('--epochs', type=int, default=100, metavar='N',
+                    help='number of epochs to train (default: 100)')
+parser.add_argument('--learning-rate', type=float, default=1e-4, metavar='N',
+                    help='learning rate (default: 1e-4)')
+parser.add_argument('--no-cuda', action='store_true', default=False,
+                    help='enables CUDA training')
+parser.add_argument('--seed', type=int, default=1, metavar='S',
+                    help='random seed (default: 1)')
+parser.add_argument('--log-interval', type=int, default=1, metavar='N',
+                    help='how many batches to wait before logging training status')
 
-num_epochs = 100
-batch_size = 128
-learning_rate = 1e-5
+args = parser.parse_args()
+args.cuda = not args.no_cuda and torch.cuda.is_available()
 
-img_transform = transforms.Compose([
-    transforms.ToTensor()
-    #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-])
+torch.manual_seed(args.seed)
+if args.cuda:
+    torch.cuda.manual_seed(args.seed)
 
 
 class CityscapesDataset(Dataset):
-    def __init__(self, root_dir, transform=None):
+    def __init__(self, root_dir):
         self.root_dir = root_dir
         self.names = os.listdir(root_dir)
-        self.transform = transform
 
     def __len__(self):
         return len(self.names)
 
     def __getitem__(self, idx):
         img_name = self.names[idx]
-        image = io.imread(os.path.join(self.root_dir, img_name))
-
-        if self.transform:
-            image = self.transform(image)
+        image = np.load(os.path.join(self.root_dir, img_name))
+        image = torch.Tensor(image)
 
         return image
 
-dataset = CityscapesDataset('./semantics', transform = img_transform)
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+dataset = CityscapesDataset('./maps')
+train_loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
 
 class VAE(nn.Module):
     def __init__(self, nc, ngf, ndf, latent_variable_size):
@@ -155,7 +166,7 @@ class VAE(nn.Module):
         return res, mu, logvar
 
 
-model = VAE(nc=3, ngf=256, ndf=512, latent_variable_size=500)
+model = VAE(nc=1, ngf=256, ndf=512, latent_variable_size=500)
 
 if args.cuda:
     model.cuda()
@@ -172,13 +183,12 @@ def loss_function(recon_x, x, mu, logvar):
 
     return BCE + KLD
 
-optimizer = optim.Adam(model.parameters(), lr=1e-4)
+optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
 
 def train(epoch):
     model.train()
     train_loss = 0
-    for batch_idx in train_loader:
-        data = load_batch(batch_idx, True)
+    for batch_idx, data in enumerate(train_loader):
         data = Variable(data)
         if args.cuda:
             data = data.cuda()
@@ -198,6 +208,16 @@ def train(epoch):
           epoch, train_loss / (len(train_loader)*128)))
     return train_loss / (len(train_loader)*128)
 
+def load_last_model():
+    models = glob('./models_vae_cnn/*.pth')
+    model_ids = [(int(f.split('_')[1]), f) for f in models]
+    start_epoch = 0
+    last_cp = 0
+    if len(model_ids) > 0:
+        start_epoch, last_cp = max(model_ids, key=lambda item:item[0])
+        print('Last checkpoint: ', last_cp)
+        model.load_state_dict(torch.load(last_cp))
+    return start_epoch, last_cp
 
 def resume_training():
     start_epoch, _ = load_last_model()
@@ -205,7 +225,7 @@ def resume_training():
     for epoch in range(start_epoch + 1, start_epoch + args.epochs + 1):
         train_loss = train(epoch)
         test_loss = test(epoch)
-        torch.save(model.state_dict(), '../models/Epoch_{}_Train_loss_{:.4f}_Test_loss_{:.4f}.pth'.format(epoch, train_loss, test_loss))
+        torch.save(model.state_dict(), './models_vae_cnn/Epoch_{}_Train_loss_{:.4f}_Test_loss_{:.4f}.pth'.format(epoch, train_loss, test_loss))
 
 
 if __name__ == '__main__':
