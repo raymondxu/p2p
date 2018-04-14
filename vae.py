@@ -123,6 +123,7 @@ for epoch in range(num_epochs):
             img = img.cuda()
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(img)
+        print("recon_batch", recon_batch.size())
         loss = loss_function(recon_batch, img, mu, logvar)
         loss.backward()
         train_loss += loss.data[0]
