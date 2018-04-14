@@ -59,11 +59,11 @@ class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(393216, 400)
-        self.fc21 = nn.Linear(400, 20)
-        self.fc22 = nn.Linear(400, 20)
-        self.fc3 = nn.Linear(20, 400)
-        self.fc4 = nn.Linear(400, 393216)
+        self.fc1 = nn.Linear(393216, 1000)
+        self.fc21 = nn.Linear(1000, 100)
+        self.fc22 = nn.Linear(1000, 100)
+        self.fc3 = nn.Linear(100, 1000)
+        self.fc4 = nn.Linear(1000, 393216)
 
     def encode(self, x):
         h1 = F.relu(self.fc1(x))
@@ -123,7 +123,6 @@ for epoch in range(num_epochs):
             img = img.cuda()
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(img)
-        print("recon_batch", recon_batch.size())
         loss = loss_function(recon_batch, img, mu, logvar)
         loss.backward()
         train_loss += loss.data[0]
