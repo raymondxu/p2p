@@ -44,7 +44,7 @@ class AlignedDataset(BaseDataset):
             A_tensor = transform_A(A.convert('RGB'))
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            A_tensor = transform_A(A)
+            A_tensor = transform_A(A) * 255.0
 
         B_tensor = inst_tensor = feat_tensor = 0
         ### input B (real images)
@@ -70,42 +70,6 @@ class AlignedDataset(BaseDataset):
                       'feat': feat_tensor, 'path': A_path}
 
         return input_dict
-
-    def get_resized(self):
-        resized = []
-        for A_path in self.A_paths:            
-            A = Image.open(A_path)        
-            params = get_params(self.opt, A.size)
-            if self.opt.label_nc == 0:
-                transform_A = get_transform(self.opt, params)
-                A_tensor = transform_A(A.convert('RGB'))
-            else:
-                transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-                A_tensor = transform_A(A)
-            resized.append(A_tensor)
-
-        # B_tensor = inst_tensor = feat_tensor = 0
-        # ### input B (real images)
-        # if self.opt.isTrain:
-        #     B_path = self.B_paths[index]   
-        #     B = Image.open(B_path).convert('RGB')
-        #     transform_B = get_transform(self.opt, params)      
-        #     B_tensor = transform_B(B)
-
-        # ### if using instance maps        
-        # if not self.opt.no_instance:
-        #     inst_path = self.inst_paths[index]
-        #     inst = Image.open(inst_path)
-        #     inst_tensor = transform_A(inst)
-
-        #     if self.opt.load_features:
-        #         feat_path = self.feat_paths[index]            
-        #         feat = Image.open(feat_path).convert('RGB')
-        #         norm = normalize()
-        #         feat_tensor = norm(transform_A(feat))                            
-
-        return resized
-
 
     def __len__(self):
         return len(self.A_paths)

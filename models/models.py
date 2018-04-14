@@ -6,9 +6,6 @@ def create_model(opt):
     if opt.model == 'pix2pixHD':
     	from .pix2pixHD_model import Pix2PixHDModel
     	model = Pix2PixHDModel()    
-    elif opt.model == 'latent':
-        from .latent_model import LatentModel
-        model = LatentModel()
     else:
     	from .ui_model import UIModel
     	model = UIModel()

@@ -34,29 +34,29 @@ def get_params(opt, size):
 
 def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
     transform_list = []
-    # if 'resize' in opt.resize_or_crop:
-    #     osize = [opt.loadSize, opt.loadSize]
-    #     transform_list.append(transforms.Scale(osize, method))   
-    # elif 'scale_width' in opt.resize_or_crop:
-    transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.loadSize, method)))
+    if 'resize' in opt.resize_or_crop:
+        osize = [opt.loadSize, opt.loadSize]
+        transform_list.append(transforms.Scale(osize, method))   
+    elif 'scale_width' in opt.resize_or_crop:
+        transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.loadSize, method)))
         
-    # if 'crop' in opt.resize_or_crop:
-    #     transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.fineSize)))
+    if 'crop' in opt.resize_or_crop:
+        transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.fineSize)))
 
-    # if opt.resize_or_crop == 'none':
-    #     base = float(2 ** opt.n_downsample_global)
-    #     if opt.netG == 'local':
-    #         base *= (2 ** opt.n_local_enhancers)
-    #     transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base, method)))
+    if opt.resize_or_crop == 'none':
+        base = float(2 ** opt.n_downsample_global)
+        if opt.netG == 'local':
+            base *= (2 ** opt.n_local_enhancers)
+        transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base, method)))
 
-    # if opt.isTrain and not opt.no_flip:
-    #     transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
+    if opt.isTrain and not opt.no_flip:
+        transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
 
-    # transform_list += [transforms.ToTensor()]
+    transform_list += [transforms.ToTensor()]
 
-    # if normalize:
-    #     transform_list += [transforms.Normalize((0.5, 0.5, 0.5),
-    #                                             (0.5, 0.5, 0.5))]
+    if normalize:
+        transform_list += [transforms.Normalize((0.5, 0.5, 0.5),
+                                                (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
 def normalize():    
