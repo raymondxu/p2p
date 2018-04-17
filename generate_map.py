@@ -3,6 +3,9 @@ from torch import nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from torchvision.utils import save_image
+from torchvision import transforms
+import os
+from skimage import io
 
 import numpy as np
 import IPython
@@ -13,12 +16,15 @@ def to_img(x):
     return x
 
 def get_avg_encodings(model):
-    maps = np.array([file for file in os.listdir() if not file.startswith('.')])
-    rand_100 = np.random.choice(maps, 100)
+    maps = np.array([file for file in os.listdir('./semantics') if not file.startswith('.')])
+    rand_100 = np.random.choice(maps, 10)
     encoding = []
-    for seg_map in rand_100:
+    for seg_map_name in rand_100:
+        seg_map = transforms.ToTensor()(io.imread(os.path.join('./semantics', seg_map_name)))
         seg_map = seg_map.view(seg_map.size(0), -1)
         seg_map = Variable(seg_map)
+        if torch.cuda.is_available():
+            seg_map = seg_map.cuda()
         encoding.append(model.get_latent_var(seg_map))
 
     IPython.embed()
