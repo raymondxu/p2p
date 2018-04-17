@@ -12,6 +12,19 @@ def to_img(x):
     x = x.view(x.size(0), 3, 256, 512)
     return x
 
+def get_avg_encodings(model):
+    maps = np.array([file for file in os.listdir() if not file.startswith('.')])
+    rand_100 = np.random.choice(maps, 100)
+    encoding = []
+    for seg_map in rand_100:
+        seg_map = seg_map.view(seg_map.size(0), -1)
+        seg_map = Variable(seg_map)
+        encoding.append(model.get_latent_var(seg_map))
+
+    IPython.embed()
+    assert False
+    # return np.
+
 class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
@@ -25,6 +38,11 @@ class VAE(nn.Module):
     def encode(self, x):
         h1 = F.relu(self.fc1(x))
         return self.fc21(h1), self.fc22(h1)
+
+    def get_latent_var(self, x):
+        mu, logvar = self.encode(x)
+        z = self.reparametrize(mu, logvar)
+        return z
 
     def reparametrize(self, mu, logvar):
         std = logvar.mul(0.5).exp_()
@@ -50,8 +68,12 @@ if __name__ == '__main__':
         model.cuda()
     model.load_state_dict(torch.load('./vae.pth'))
 
+    avg_encoding = get_avg_encodings(model)
+
+    encoding = generate_encoding(avg_encoding)
+
     # generate random encoding
-    encoding = Variable(torch.randn(1, 100))
+    encoding = Variable(encoding)
     if torch.cuda.is_available():
         encoding = encoding.cuda()
     
