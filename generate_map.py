@@ -39,7 +39,7 @@ def generate_encoding(avg):
 
 def post_processing(img_name):
     img = cv2.imread(img_name)
-    blur = cv2.medianBlur(img, 9)
+    blur = cv2.medianBlur(img, 5)
     cv2.imwrite(img_name, blur)
     return blur
 
