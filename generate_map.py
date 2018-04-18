@@ -2,7 +2,6 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from torchvision.utils import save_image
 from torchvision import transforms
 import os
 from skimage import io
@@ -40,10 +39,7 @@ def generate_encoding(avg):
 def post_processing(img_name, out_name):
     img = cv2.imread(img_name)
     blur = cv2.medianBlur(img, 9)
-    kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
-    sharp = cv2.filter2D(blur, -1, kernel)
-    resized = cv2.resize(sharp, (512, 256))
-    cv2.imwrite(out_name, resized)
+    cv2.imwrite(out_name, blur)
     return blur
 
 class VAE(nn.Module):
@@ -105,5 +101,5 @@ if __name__ == '__main__':
         # form image
         img = to_img(map.cpu().data)
         orig_img_name = "generated_maps/orig_map{}.png".format(i)
-        save_image(img, orig_img_name)
+        io.imsave(orig_img_name, img[0].numpy().transpose((1, 2, 0)))
         post_processing(orig_img_name, "generated_maps/gen_map{}.png".format(i))
