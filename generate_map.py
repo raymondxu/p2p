@@ -79,18 +79,19 @@ if __name__ == '__main__':
         model.cuda()
     model.load_state_dict(torch.load('./vae.pth'))
 
-    avg_encoding = get_avg_encodings(model)
+    for i in range(10):
+        avg_encoding = get_avg_encodings(model)
 
-    encoding = generate_encoding(avg_encoding)
+        encoding = generate_encoding(avg_encoding)
 
-    # generate random encoding
-    encoding = Variable(encoding)
-    if torch.cuda.is_available():
-        encoding = encoding.cuda()
+        # generate random encoding
+        encoding = Variable(encoding)
+        if torch.cuda.is_available():
+            encoding = encoding.cuda()
     
-    # decode 
-    map = model.decode(encoding)
+        # decode 
+        map = model.decode(encoding)
 
-    # form image
-    img = to_img(map.cpu().data)
-    save_image(img, "test_decode.png")
+        # form image
+        img = to_img(map.cpu().data)
+        save_image(img, "generated_maps/gen_map{}.png".format(i))

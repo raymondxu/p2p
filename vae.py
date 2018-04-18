@@ -24,9 +24,9 @@ def to_img(x):
     return x
 
 
-num_epochs = 100
+num_epochs = 200
 batch_size = 128
-learning_rate = 1e-5
+learning_rate = 1e-4
 
 img_transform = transforms.Compose([
     transforms.ToTensor()
