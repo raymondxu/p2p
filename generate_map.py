@@ -42,7 +42,7 @@ def post_processing(img_name, out_name):
     blur = cv2.medianBlur(img, 9)
     kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
     sharp = cv2.filter2D(blur, -1, kernel)
-    resized = cv2.resize(sharp, (256, 512))
+    resized = cv2.resize(sharp, (512, 256))
     cv2.imwrite(out_name, resized)
     return blur
 
