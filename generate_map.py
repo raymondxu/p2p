@@ -21,15 +21,14 @@ def get_avg_encodings(model):
     encoding = []
     for seg_map_name in rand_100:
         seg_map = transforms.ToTensor()(io.imread(os.path.join('./semantics', seg_map_name)))
-        seg_map = seg_map.view(seg_map.size(0), -1)
+        seg_map = seg_map.view(1, -1)
         seg_map = Variable(seg_map)
         if torch.cuda.is_available():
             seg_map = seg_map.cuda()
         encoding.append(model.get_latent_var(seg_map))
 
     IPython.embed()
-    assert False
-    # return np.
+    return np.mean(np.array(encoding))
 
 class VAE(nn.Module):
     def __init__(self):
