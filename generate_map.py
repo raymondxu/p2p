@@ -106,4 +106,4 @@ if __name__ == '__main__':
         orig_img_name = "generated_maps/orig_map{}.png".format(i)
         save_image(img, orig_img_name)
  
-        post_processing(orig_img_name, "generated_maps/gen_maps{}.png".format(i))
+        post_processing(orig_img_name, "generated_maps/gen_map{}.png".format(i))
