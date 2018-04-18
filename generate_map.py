@@ -6,6 +6,7 @@ from torchvision.utils import save_image
 from torchvision import transforms
 import os
 from skimage import io
+import cv2
 
 import numpy as np
 import IPython
@@ -35,6 +36,12 @@ def generate_encoding(avg):
     for i in idx:
         encoding[0,i] = encoding[0, i] + np.random.rand()
     return torch.from_numpy(encoding)
+
+def post_processing(img_name):
+    img = cv2.imread(img_name)
+    blur = cv2.bilateralFilter(img, 5, 100, 100)
+    cv2.imwrite(img_name, blur)
+    return blur
 
 class VAE(nn.Module):
     def __init__(self):
@@ -94,4 +101,7 @@ if __name__ == '__main__':
 
         # form image
         img = to_img(map.cpu().data)
-        save_image(img, "generated_maps/gen_map{}.png".format(i))
+        img_name = "generated_maps/gen_map{}.png".format(i)
+        save_image(img, img_name)
+ 
+        post_processing(img_name)
