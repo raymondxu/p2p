@@ -25,7 +25,7 @@ def get_avg_encodings(model):
         seg_map = Variable(seg_map)
         if torch.cuda.is_available():
             seg_map = seg_map.cuda()
-        encoding.append(model.get_latent_var(seg_map))
+        encoding.append(model.get_latent_var(seg_map).cpu().data.numpy())
 
     IPython.embed()
     return np.mean(np.array(encoding))
