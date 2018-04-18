@@ -37,12 +37,12 @@ def generate_encoding(avg):
         encoding[0,i] = encoding[0, i] + np.random.rand()
     return torch.from_numpy(encoding)
 
-def post_processing(img_name):
+def post_processing(img_name, out_name):
     img = cv2.imread(img_name)
     blur = cv2.medianBlur(img, 5)
     kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
     sharp = cv2.filter2D(blur, -1, kernel)
-    cv2.imwrite(img_name, blur)
+    cv2.imwrite(out_name, blur)
     return blur
 
 class VAE(nn.Module):
@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
         # form image
         img = to_img(map.cpu().data)
-        img_name = "generated_maps/gen_map{}.png".format(i)
-        save_image(img, img_name)
+        orig_img_name = "generated_maps/orig_map{}.png".format(i)
+        save_image(img, orig_img_name)
  
-        post_processing(img_name)
+        post_processing(orig_img_name, "generated_maps/gen_maps{}.png".format(i))
