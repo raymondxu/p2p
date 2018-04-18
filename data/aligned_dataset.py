@@ -10,6 +10,12 @@ class AlignedDataset(BaseDataset):
         self.opt = opt
         self.root = opt.dataroot    
 
+        if self.opt.vae == 1:
+            self.dir_A = os.path.join(opt.dataroot, opt.phase + '_vae')
+            self.A_paths = sorted(make_dataset(self.dir_A))
+            self.dataset_size = len(self.A_paths)
+            return
+
         ### input A (label maps)
         dir_A = '_A' if self.opt.label_nc == 0 else '_label'
         self.dir_A = os.path.join(opt.dataroot, opt.phase + dir_A)
