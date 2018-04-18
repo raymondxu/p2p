@@ -31,8 +31,9 @@ def get_avg_encodings(model):
 
 def generate_encoding(avg):
     encoding = np.copy(avg)
-    idx = np.random.choice(encoding.size)
-    encoding[0,idx] = encoding[0, idx] + np.random.rand()
+    idx = np.random.choice(encoding.size, 10)
+    for i in idx:
+        encoding[0,i] = encoding[0, i] + np.random.rand()
     return torch.from_numpy(encoding)
 
 class VAE(nn.Module):
