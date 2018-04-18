@@ -27,8 +27,13 @@ def get_avg_encodings(model):
             seg_map = seg_map.cuda()
         encoding.append(model.get_latent_var(seg_map).cpu().data.numpy())
 
-    IPython.embed()
-    return np.mean(np.array(encoding))
+    return np.mean(np.array(encoding), axis=0)
+
+def generate_encoding(avg):
+    encoding = np.copy(avg)
+    idx = np.random.choice(encoding.size)
+    encoding[0,idx] = encoding[0, idx] + np.random.rand()
+    return torch.from_numpy(encoding)
 
 class VAE(nn.Module):
     def __init__(self):
