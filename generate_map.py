@@ -40,6 +40,8 @@ def generate_encoding(avg):
 def post_processing(img_name):
     img = cv2.imread(img_name)
     blur = cv2.medianBlur(img, 5)
+    kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
+    sharp = cv2.filter2D(blur, -1, kernel)
     cv2.imwrite(img_name, blur)
     return blur
 
