@@ -59,8 +59,9 @@ def process_all(input_dir, output_dir):
                 class_id = get_nearest_class(img.getpixel((i, j)))
                 new_img_data[i][j] = class_id
 
-        new_img = Image.fromarray(new_img_data, mode='L')
+        new_img = Image.fromarray(new_img_data.astype('uint8'), mode='L')
         new_img.save(os.path.join(output_dir, 'clustered_{}'.format(f)))
+        new_img.show()
 
 
 def get_nearest_class(color):
