@@ -77,7 +77,7 @@ if __name__ == '__main__':
     """
     Usage: python3 rcnn_to_gan <input_masks_dir> <input_class_map_dir> <output_dir>
 
-    Masks are one-hot npy files of shape (n_classes, w, h).
+    Masks are one-hot npy files of shape (w, h, n_classes).
     Class maps are npy files of shape (n_classes, 1) and maps each layer of the mask to a coco class.
     The created files will be written to `<output_dir>/test_label` and `<output_dir>/test_inst`.
     """
