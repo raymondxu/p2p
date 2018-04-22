@@ -45,8 +45,10 @@ def make_seg(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
     seg_data = np.zeros((w, h))
 
     for mask_layer, coco_class_id in enumerate(class_map):
-        seg_data += mask[:,:,mask_layer] * (coco_to_cityscapes_id(coco_class_id) * np.ones((w, h)))
+        temp = coco_to_cityscapes_id(coco_class_id)
+        seg_data += mask[:,:,mask_layer] * coco_to_cityscapes_id(coco_class_id)
 
+    seg_data = np.clip(seg_data, 1, 35) # temp workaround
     seg_img = Image.fromarray(seg_data.astype('uint8'), mode='L')
     seg_img.save(os.path.join(output_dir, GAN_SEG_MAP_DIR, '{}.png'.format(mask_name[:-4])))
 
@@ -63,13 +65,14 @@ def make_inst(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
     
     w, h, objs = mask.shape
     inst_data = np.zeros((w, h))
-    object_counter = 100
+    object_counter = 1
 
     for mask_layer, coco_class_id in enumerate(class_map):
         if coco_class_id > 0:
             inst_data += mask[:,:,mask_layer] * (object_counter * np.ones((w, h)))
+            object_counter += 1
 
-    inst_img = Image.fromarray(inst_data.astype('int32'), mode='I')
+    inst_img = Image.fromarray(inst_data.astype('int32'), mode='L')
     inst_img.save(os.path.join(output_dir, GAN_INST_DIR, '{}.png'.format(mask_name[:-4])))
 
 
