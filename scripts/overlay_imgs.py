@@ -1,5 +1,8 @@
 from skimage import io
 import sys
+import numpy as np
+from PIL import Image
+
 
 def overlay_semantic_map(front, back):
     overlay = np.where(front != 0, front, back)
