@@ -4,6 +4,8 @@ import sys
 from PIL import Image
 import numpy as np
 
+from collections import defaultdict
+
 
 GAN_SEG_MAP_DIR = 'test_label'
 GAN_INST_DIR = 'test_inst'
@@ -67,12 +69,15 @@ def make_inst(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
     inst_data = np.zeros((w, h))
     object_counter = 1
 
+    object_dict = defaultdict(int)
+
     for mask_layer, coco_class_id in enumerate(class_map):
         if coco_class_id > 0:
-            inst_data += mask[:,:,mask_layer] * (object_counter * np.ones((w, h)))
-            object_counter += 1
+            obj_id = coco_to_cityscapes_id(coco_class_id) * 1000 + object_dict[coco_class_id]
+            object_dict[coco_class_id] += 1
+            inst_data += mask[:,:,mask_layer] * obj_id
 
-    inst_img = Image.fromarray(inst_data.astype('int32'), mode='L')
+    inst_img = Image.fromarray(inst_data.astype('int32'), mode='I')
     inst_img.save(os.path.join(output_dir, GAN_INST_DIR, '{}.png'.format(mask_name[:-4])))
 
 
