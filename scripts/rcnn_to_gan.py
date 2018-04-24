@@ -12,14 +12,14 @@ GAN_INST_DIR = 'test_inst'
 def coco_to_cityscapes_id(coco_id):
     lookup = {
         0: 0,  # ... background
-        1: 33,  # bicycle
-        2: 26,  # car
-        3: 24,  # person
-        4: 31,  # train
-        5: 27,  # truck
-        6: 32,  # motorcycle
-        7: 28,  # bus
-        8: 25,  # rider ("person", *rider has human right!*)
+        1: 24,  # person
+        2: 33,  # bike
+        3: 26,  # car
+        4: 32,  # motorcycle
+        5: 0,  # airplane
+        6: 28,  # bus
+        7: 31,  # train
+        8: 27,  # truck
     }
     return lookup[coco_id]
 
@@ -48,7 +48,7 @@ def make_seg(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
         temp = coco_to_cityscapes_id(coco_class_id)
         seg_data += mask[:,:,mask_layer] * coco_to_cityscapes_id(coco_class_id)
 
-    seg_data = np.clip(seg_data, 1, 35) # temp workaround
+    seg_data = np.clip(seg_data, 1, 30) # temp workaround
     seg_img = Image.fromarray(seg_data.astype('uint8'), mode='L')
     seg_img.save(os.path.join(output_dir, GAN_SEG_MAP_DIR, '{}.png'.format(mask_name[:-4])))
 
