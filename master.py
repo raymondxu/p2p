@@ -11,8 +11,7 @@ from scripts.rcnn_to_gan import rcnn_to_gan_main
 from scripts.overlay_imgs import overlay_main
 
 
-ROOT_DIR = os.path.abspath('./')
-TEMP_DIR = os.path.join(ROOT_DIR, 'master_temp')
+TEMP_DIR = '/tmp'
 
 RCNN_OUTPUT_MASK_DIR = os.path.join(TEMP_DIR, 'rcnn_mask')
 RCNN_OUTPUT_CLASS_MAP_DIR = os.path.join(TEMP_DIR, 'rcnn_class_map')
@@ -21,10 +20,23 @@ OVERLAY_INPUT_DIR = os.path.join(TEMP_DIR, 'overlay_input')
 OVERLAY_INPUT_SEG_DIR = os.path.join(OVERLAY_INPUT_DIR, 'test_label')
 OVERLAY_INPUT_INST_DIR = os.path.join(OVERLAY_INPUT_DIR, 'test_inst')
 
-GAN_INPUT_DIR = os.path.join(ROOT_DIR, 'datasets/master')
+GAN_INPUT_DIR = 'datasets/master'
 OVERLAY_OUTPUT_SEG_DIR = os.path.join(GAN_INPUT_DIR, 'test_label')
 OVERLAY_OUTPUT_INST_DIR = os.path.join(GAN_INPUT_DIR, 'test_inst')
-GAN_OUTPUT_DIR = os.path.join(ROOT_DIR, 'results_rcnn/test_1024p')
+GAN_OUTPUT_DIR = 'results_rcnn/test_1024p'
+
+DIRS = [
+    TEMP_DIR,
+    RCNN_OUTPUT_MASK_DIR,
+    RCNN_OUTPUT_CLASS_MAP_DIR,
+    OVERLAY_INPUT_DIR,
+    OVERLAY_INPUT_SEG_DIR,
+    OVERLAY_INPUT_INST_DIR,
+    GAN_INPUT_DIR,
+    OVERLAY_OUTPUT_SEG_DIR,
+    OVERLAY_OUTPUT_INST_DIR,
+    GAN_OUTPUT_DIR,
+]
 
 
 def process_all(input_dir, output_dir, bg_seg, bg_inst):
@@ -86,9 +98,9 @@ if __name__ == '__main__':
     bg_seg = args.bg_seg
     bg_inst = args.bg_inst
 
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-    if not os.path.exists(TEMP_DIR):
-        os.mkdir(TEMP_DIR)
 
+    for d in DIRS:
+        if not os.path.exists(d):
+            os.mkdir(d)
+    
     process_all(input_dir, output_dir, bg_seg, bg_inst)

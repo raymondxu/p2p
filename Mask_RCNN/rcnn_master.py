@@ -30,7 +30,6 @@ def rcnn_main(input_dir):
     # Import COCO config
     sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local version
 
-    import pdb; pdb.set_trace()
     from Mask_RCNN.samples.coco import coco
 
 
@@ -125,7 +124,7 @@ def rcnn_main(input_dir):
     # In[5]:
 
 
-    TEMP_DIR = os.path.join(ROOT_DIR, '..', 'master_temp')
+    TEMP_DIR = '/tmp'
     RCNN_OUTPUT_MASK_DIR = os.path.join(TEMP_DIR, 'rcnn_mask')
     RCNN_OUTPUT_CLASS_MAP_DIR = os.path.join(TEMP_DIR, 'rcnn_class_map')
 
