@@ -6,14 +6,16 @@ import subprocess
 from PIL import Image
 import numpy as np
 
-from scripts.rcnn_to_gan import process_main
+from Mask_RCNN import rcnn_main
+from scripts.rcnn_to_gan import rcnn_to_gan_main
 
 
-TEMP_DIR = 'master_temp'
+ROOT_DIR = os.path.abspath('./')
+TEMP_DIR = os.path.join(ROOT_DIR, 'master_temp')
 RCNN_OUTPUT_MASK_DIR = os.path.join(TEMP_DIR, 'rcnn_mask')
 RCNN_OUTPUT_CLASS_MAP_DIR = os.path.join(TEMP_DIR, 'rcnn_class_map')
-GAN_INPUT_DIR = 'datasets/master'
-GAN_OUTPUT_DIR = 'results_rcnn/test_1024p'
+GAN_INPUT_DIR = os.path.join(ROOT_DIR, 'datasets/master')
+GAN_OUTPUT_DIR = os.path.join(ROOT_DIR, 'results_rcnn/test_1024p')
 
 
 parser = argparse.ArgumentParser(description='Segmentation-Driven Image Variation Generation Pipeline')
@@ -26,14 +28,13 @@ def process_all(input_dir, output_dir):
         print('Processing {}'.format(f))
 
 
-def run_rcnn(input_dir, output_dir):
+def run_rcnn(input_dir):
     print('Running RCNN...')
-    pass
-
+    rcnn_main(input_dir)
 
 def run_rcnn_to_gan():
     print('Running rcnn_to_gan...')
-    process_main(RCNN_OUTPUT_MASK_DIR, RCNN_OUTPUT_CLASS_MAP_DIR, GAN_INPUT_DIR)
+    rcnn_to_gan_main(RCNN_OUTPUT_MASK_DIR, RCNN_OUTPUT_CLASS_MAP_DIR, GAN_INPUT_DIR)
 
 
 def run_gan(output_dir):
