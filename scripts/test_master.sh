@@ -1,0 +1,1 @@
+python3 test.py --name label2city_1024p --netG local --ngf 32 --dataroot ./datasets/master --results_dir ./results_rcnn/
