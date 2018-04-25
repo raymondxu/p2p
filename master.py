@@ -6,7 +6,7 @@ import subprocess
 from PIL import Image
 import numpy as np
 
-from Mask_RCNN import rcnn_main
+from Mask_RCNN.rcnn_master import rcnn_main
 from scripts.rcnn_to_gan import rcnn_to_gan_main
 from scripts.overlay_imgs import overlay_main
 

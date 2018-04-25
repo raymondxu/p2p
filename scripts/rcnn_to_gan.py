@@ -81,7 +81,7 @@ def make_inst(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
     inst_img.save(os.path.join(output_dir, GAN_INST_DIR, '{}.png'.format(mask_name[:-4])))
 
 
-def rcnn_to_gain_main(input_mask_dir, input_class_map_dir, output_dir):
+def rcnn_to_gan_main(input_mask_dir, input_class_map_dir, output_dir):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     seg_path = os.path.join(output_dir, GAN_SEG_MAP_DIR)
