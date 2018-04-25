@@ -23,7 +23,7 @@ OVERLAY_INPUT_INST_DIR = os.path.join(OVERLAY_INPUT_DIR, 'test_inst')
 GAN_INPUT_DIR = 'datasets/master'
 OVERLAY_OUTPUT_SEG_DIR = os.path.join(GAN_INPUT_DIR, 'test_label')
 OVERLAY_OUTPUT_INST_DIR = os.path.join(GAN_INPUT_DIR, 'test_inst')
-GAN_OUTPUT_DIR = 'results_rcnn/test_1024p'
+GAN_OUTPUT_DIR = 'results_rcnn'
 
 DIRS = [
     TEMP_DIR,
@@ -78,11 +78,14 @@ def run_gan(output_dir):
 
     # Run GAN
     command = 'bash scripts/test_master.sh'
-    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    ret = subprocess.call(command.split())
 
+    print('Moving results to {}...'.format(output_dir))
     # Move results to output_dir
-    shutil.move(GAN_OUTPUT_DIR, output_dir)
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+        os.mkdir(output_dir)
+    shutil.move(os.path.join(GAN_OUTPUT_DIR), output_dir)
 
 
 if __name__ == '__main__':
@@ -98,9 +101,8 @@ if __name__ == '__main__':
     bg_seg = args.bg_seg
     bg_inst = args.bg_inst
 
-
     for d in DIRS:
         if not os.path.exists(d):
             os.mkdir(d)
-    
+
     process_all(input_dir, output_dir, bg_seg, bg_inst)
