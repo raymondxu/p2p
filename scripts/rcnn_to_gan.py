@@ -7,8 +7,8 @@ import numpy as np
 from collections import defaultdict
 
 
-GAN_SEG_MAP_DIR = 'test_master_label'
-GAN_INST_DIR = 'test_master_inst'
+GAN_SEG_MAP_DIR = 'test_label'
+GAN_INST_DIR = 'test_inst'
 
 
 def coco_to_cityscapes_id(coco_id):

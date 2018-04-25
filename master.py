@@ -12,7 +12,7 @@ from scripts.rcnn_to_gan import process_main
 TEMP_DIR = 'master_temp'
 RCNN_OUTPUT_MASK_DIR = os.path.join(TEMP_DIR, 'rcnn_mask')
 RCNN_OUTPUT_CLASS_MAP_DIR = os.path.join(TEMP_DIR, 'rcnn_class_map')
-GAN_INPUT_DIR = 'datasets/cityscapes'
+GAN_INPUT_DIR = 'datasets/master'
 GAN_OUTPUT_DIR = 'results_rcnn/test_1024p'
 
 
