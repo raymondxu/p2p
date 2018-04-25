@@ -7,8 +7,8 @@ import numpy as np
 from collections import defaultdict
 
 
-GAN_SEG_MAP_DIR = 'test_label'
-GAN_INST_DIR = 'test_inst'
+GAN_SEG_MAP_DIR = 'test_master_label'
+GAN_INST_DIR = 'test_master_inst'
 
 
 def coco_to_cityscapes_id(coco_id):
@@ -81,6 +81,19 @@ def make_inst(mask_name, mask_dir, class_map_name, class_map_dir, output_dir):
     inst_img.save(os.path.join(output_dir, GAN_INST_DIR, '{}.png'.format(mask_name[:-4])))
 
 
+def process_main(input_mask_dir, input_class_map_dir, output_dir):
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    seg_path = os.path.join(output_dir, GAN_SEG_MAP_DIR)
+    inst_path = os.path.join(output_dir, GAN_INST_DIR)
+    if not os.path.exists(seg_path):
+        os.mkdir(seg_path)
+    if not os.path.exists(inst_path):
+        os.mkdir(inst_path)
+
+    process_all(input_mask_dir, input_class_map_dir, output_dir)
+
+
 if __name__ == '__main__':
     """
     Usage: python3 rcnn_to_gan <input_masks_dir> <input_class_map_dir> <output_dir>
@@ -92,14 +105,5 @@ if __name__ == '__main__':
     input_mask_dir = sys.argv[1]
     input_class_map_dir = sys.argv[2]
     output_dir = sys.argv[3]
-    
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-    seg_path = os.path.join(output_dir, GAN_SEG_MAP_DIR)
-    inst_path = os.path.join(output_dir, GAN_INST_DIR)
-    if not os.path.exists(seg_path):
-        os.mkdir(seg_path)
-    if not os.path.exists(inst_path):
-        os.mkdir(inst_path)
 
-    process_all(input_mask_dir, input_class_map_dir, output_dir)
+    process_main(input_mask_dir, input_class_map_dir, output_dir)
