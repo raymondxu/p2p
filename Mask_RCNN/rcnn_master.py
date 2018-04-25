@@ -29,9 +29,10 @@ def rcnn_main(input_dir):
     from mrcnn import visualize
     # Import COCO config
     sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local version
-    import coco
 
-    get_ipython().run_line_magic('matplotlib', 'inline')
+    import pdb; pdb.set_trace()
+    from Mask_RCNN.samples.coco import coco
+
 
     # Directory to save logs and trained model
     MODEL_DIR = os.path.join(ROOT_DIR, "logs")
@@ -43,7 +44,7 @@ def rcnn_main(input_dir):
         utils.download_trained_weights(COCO_MODEL_PATH)
 
     # Directory of images to run detection on
-    IMAGE_DIR = os.path.join(ROOT_DIR, '..', input_dir)
+    IMAGE_DIR = os.path.join(os.getcwd(), input_dir)
 
 
     # ## Configurations
