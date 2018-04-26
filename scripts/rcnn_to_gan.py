@@ -18,12 +18,14 @@ def coco_to_cityscapes_id(coco_id):
         2: 33,  # bike
         3: 26,  # car
         4: 32,  # motorcycle
-        5: 0,  # airplane
+        5: 0,   # airplane
         6: 28,  # bus
         7: 31,  # train
         8: 27,  # truck
+       10: 19,  # traffic light
+       13: 20   # stop sign
     }
-    return lookup[coco_id]
+    return lookup[coco_id] if coco_id in lookup else 0
 
 
 def process_all(input_mask_dir, input_class_map_dir, output_dir):

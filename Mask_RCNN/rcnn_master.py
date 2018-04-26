@@ -141,3 +141,6 @@ def rcnn_main(input_dir):
 
         np.save(mask_out, r['masks'])
         np.save(class_map_out, r['class_ids'])
+   
+
+    del model
