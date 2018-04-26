@@ -1,1 +1,2 @@
-python3 master.py master_test_label.png master_test_inst.png
+python3 master.py $1 $2 1
+python3 master.py $1 $2 2

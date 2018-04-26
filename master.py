@@ -43,14 +43,13 @@ DIRS = [
 
 
 def process_all(input_dir, output_dir, bg_seg, bg_inst, part):
-    for f in os.listdir(input_dir):
-        print('Processing {}'.format(f))
-        if part == 1:
-            run_rcnn(input_dir)
-            run_rcnn_to_gan()
-            run_overlay(bg_seg, bg_inst)
-        else:
-            run_gan(output_dir)
+    print('Processing...')
+    if part == 1:
+        run_rcnn(input_dir)
+        run_rcnn_to_gan()
+        run_overlay(bg_seg, bg_inst)
+    if part == 2:
+        run_gan(output_dir)
 
 
 def run_rcnn(input_dir):
@@ -59,8 +58,6 @@ def run_rcnn(input_dir):
     torch.cuda.empty_cache()
     from keras import backend as be
     be.clear_session()
-    import pdb
-    pdb.set_trace()
 
 def run_rcnn_to_gan():
     print('Running rcnn_to_gan...')

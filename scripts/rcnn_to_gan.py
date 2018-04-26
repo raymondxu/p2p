@@ -29,7 +29,7 @@ def coco_to_cityscapes_id(coco_id):
 
 
 def process_all(input_mask_dir, input_class_map_dir, output_dir):
-    for mask, class_map in zip(os.listdir(input_mask_dir), os.listdir(input_class_map_dir)):
+    for mask, class_map in zip(sorted(os.listdir(input_mask_dir)), sorted(os.listdir(input_class_map_dir))):
         print('Processing {} and {}'.format(mask, class_map))
         make_seg(mask, input_mask_dir, class_map, input_class_map_dir, output_dir)
         make_inst(mask, input_mask_dir, class_map, input_class_map_dir, output_dir)
