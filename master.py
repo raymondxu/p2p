@@ -81,10 +81,7 @@ def run_overlay(bg_seg, bg_inst):
 
 def run_gan(output_dir):
     print('Running GAN...')
-
     # Run GAN
-    command = 'bash scripts/test_master.sh'
-    #ret = subprocess.call(command.split())
     gan_main()
 
     print('Moving results to {}...'.format(output_dir))
