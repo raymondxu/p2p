@@ -75,8 +75,6 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
         loss_D.backward()
         model.module.optimizer_D.step()
 
-        #call(["nvidia-smi", "--format=csv", "--query-gpu=memory.used,memory.free"]) 
-
         ############## Display results and errors ##########
         ### print out errors
         if total_steps % opt.print_freq == 0:
